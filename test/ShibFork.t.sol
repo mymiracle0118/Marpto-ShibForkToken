@@ -28,12 +28,12 @@ contract ShibForkTest is Test {
         vm.selectFork(bscfork);
         assertEq(vm.activeFork(), bscfork);
 
-        vm.rollFork(36532683);
+        vm.rollFork(36534053);
 
         shib = new ShibFork(tokenOwner);
     }
 
-    function test_buy_shibFork() public {
+    function test_buy_fee() public {
 
         test_createAndAddLiquidity();
 
@@ -58,17 +58,133 @@ contract ShibForkTest is Test {
             block.timestamp + 300 // Set a deadline for the swap
         );
 
-        console.log("===========After buy=========");
-        console.log(shib.balanceOf(alice));
-        console.log(shib.balanceOf(shib.feeReceiver()));
+        vm.prank(alice);
+        // (bool success,) =
+        // Make the swap
+        router.swapExactETHForTokensSupportingFeeOnTransferTokens{ value: 1 ether }(
+            0, // Accept any amount of tokens
+            path,
+            address(alice), // Send the tokens to this contract
+            block.timestamp + 300 // Set a deadline for the swap
+        );
+
+        assertEq(shib.feeReceiver(), tokenOwner);
+        assertLt(shib.balanceOf(alice), 1 ether);
+        assertGt(shib.balanceOf(shib.feeReceiver()), 0);
+    }
+
+    function test_sell_sellfee() external {
+
+        test_createAndAddLiquidity();
+
+        IUniswapV2Router02 router = IUniswapV2Router02(routerAddress);
+
+        vm.prank(tokenOwner);
+        shib.setDex(poolAddress, true);
+
+        vm.prank(tokenOwner);
+        shib.mint(alice, 10 ether);
+
+        vm.prank(alice);
+        // Approve the router to spend the tokens
+        shib.approve(address(router), 1 ether);
+
+
+        // Path is defined as [token address, WBNB address]
+        address[] memory path = new address[](2);
+        path[0] = address(shib);
+        path[1] = wbnbAddress;
+
+        vm.prank(alice);
+        // Swap the tokens
+        router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+            1 ether,
+            1, // AmountOutMinimum
+            path,
+            address(alice),
+            block.timestamp + 15
+        );
+
+        assertEq(shib.feeReceiver(), tokenOwner);
+        assertGt(address(alice).balance, 0);
+        assertGt(shib.balanceOf(shib.feeReceiver()), 0);
+    }
+
+    function test_buy_whitelist() public {
+
+        test_createAndAddLiquidity();
+
+        IUniswapV2Router02 router = IUniswapV2Router02(routerAddress);
+
+        address[] memory path = new address[](2);
+        path[0] = wbnbAddress;
+        path[1] = address(shib);
+
+        vm.deal(alice, 5 ether);
+
+        vm.prank(tokenOwner);
+        shib.setDex(poolAddress, true);
+
+        vm.prank(tokenOwner);
+        shib.setWhiteList(alice, true);
+
+        vm.prank(alice);
+        // (bool success,) =
+        // Make the swap
+        router.swapExactETHForTokensSupportingFeeOnTransferTokens{ value: 1 ether }(
+            0, // Accept any amount of tokens
+            path,
+            address(alice), // Send the tokens to this contract
+            block.timestamp + 300 // Set a deadline for the swap
+        );
+        assertEq(shib.feeReceiver(), tokenOwner);
+        assertLt(shib.balanceOf(alice), 1 ether);
+        assertEq(shib.balanceOf(shib.feeReceiver()), 0);
+    }
+
+    function test_sell_whitelist() external {
+
+        test_createAndAddLiquidity();
+
+        IUniswapV2Router02 router = IUniswapV2Router02(routerAddress);
+
+        vm.prank(tokenOwner);
+        shib.setDex(poolAddress, true);
+
+        vm.prank(tokenOwner);
+        shib.mint(alice, 10 ether);
+
+        vm.prank(tokenOwner);
+        shib.setWhiteList(alice, true);
+
+        vm.prank(alice);
+        // Approve the router to spend the tokens
+        shib.approve(address(router), 1 ether);
+
+
+        // Path is defined as [token address, WBNB address]
+        address[] memory path = new address[](2);
+        path[0] = address(shib);
+        path[1] = wbnbAddress;
+
+        vm.prank(alice);
+        // Swap the tokens
+        router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+            1 ether,
+            1, // AmountOutMinimum
+            path,
+            address(alice),
+            block.timestamp + 15
+        );
+
+        assertEq(shib.feeReceiver(), tokenOwner);
+        assertGt(address(alice).balance, 0);
+        assertEq(shib.balanceOf(shib.feeReceiver()), 0);
     }
 
     function test_createAndAddLiquidity() public {
         // Create the pair if it hasn't been initialized yet.
         pool = IUniswapV2Factory(factoryAddress).createPair(address(shib), wbnbAddress);
-
-        console.log("pool address");
-        console.log(address(pool));
 
         vm.deal(alice, 10 ether);
 
@@ -76,8 +192,6 @@ contract ShibForkTest is Test {
         (bool success,) =
             wbnbAddress.call{ value: 10 ether }(abi.encodeWithSignature("deposit(address,uint256)", alice, 10 ether));
         if (!success) return;
-
-        console.log(IWETH(wbnbAddress).balanceOf(address(alice)));
 
         vm.prank(tokenOwner);
         shib.mint(address(alice), 10 ether);
@@ -87,7 +201,6 @@ contract ShibForkTest is Test {
 
         vm.startPrank(alice);
         IWETH(wbnbAddress).approve(address(routerAddress), 10 ether);
-        console.log(IWETH(wbnbAddress).allowance(address(alice), address(routerAddress)));
         shib.approve(address(routerAddress), 10 ether);
         vm.stopPrank();
 

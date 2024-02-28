@@ -57,8 +57,15 @@ contract ShibFork is ERC20, Ownable {
 
     function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
         console.log("transferFrom function");
+
+        console.log("transfer from address");
+        console.log(from);
+        console.log("transfer to address");
+        console.log(to);
+        
         address spender = _msgSender();
         _spendAllowance(from, spender, amount);
+        console.log("after allowance");
 
         uint256 effectiveAmount = amount;
         uint256 feeAmount;
