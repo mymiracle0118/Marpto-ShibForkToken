@@ -7,12 +7,8 @@
     "slither": "slither .",
     "test": "npm run test:unit",
     "test:unit": "forge test --match-path ./test/** -vv",
-    "test:mrptoken": "forge test --match-path ./test/MRPTTokenTest.t.sol -vv",
-    "test:mrptoeken_transferfee": "forge test --match-path ./test/MRPTTokenTest.t.sol -vv --match-test test_transferFee",
-    "test:sniperv2": "forge test --match-path ./test/Sniperv2Test.t.sol -vv",
-    "test:sniperv2_createliquidity": "forge test --match-path ./test/Sniperv2Test.t.sol -vvvvv --match-test test_createAndAddLiquidity",
-    "test:sniperv2_buy": "forge test --match-path ./test/Sniperv2Test.t.sol -vvvvv --match-test test_buyMRPT",
-    "test:sniperv2_withdraw": "forge test --match-path ./test/Sniperv2Test.t.sol -vvvvv --match-test test_WithdrawToken",
+    "test:buy": "forge test --match-path ./test/ShibFork.t.sol -vv",
+    "test:buyfee": "forge test --match-path ./test/ShibFork.t.sol -vvvvv --match-test test_buy_shibFork",
     "test:deploy": "forge test --match-path ./test/MRPTFactoryTest.t.sol -vv",
     "test:deploy_sepolia": "forge test --match-path ./test/MRPTFactoryTest.t.sol -vvvvv --match-test testSepoliaDeploy",
     "deploy": "forge create --private-key YOUR-PRIVATE-KEY --rpc-url ${SEPOLIA_RPC_URL} --constructor-args $START_TIME_STAMP $ECOSYSTEM $MARKETING $STAKING_REWARD $TEAM $ADVISOR $LZPOINT --verify --etherscan-api-key YOUR-ETHERSCAN-API-KEY src/MRPTToken.sol:MRPTToken",
@@ -23,12 +19,10 @@
     "git": "git add . && git commit -m 'Test' && git push --all"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "5.0.0",
     "@uniswap/v2-periphery": "*",
     "@uniswap/v3-periphery": "*",
     "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
-    "dotenv-cli": "^7.3.0",
-    "i": "^0.3.7"
+    "dotenv-cli": "^7.3.0"
   }
 }
