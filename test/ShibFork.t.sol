@@ -6,9 +6,10 @@ import {ShibFork} from "src/ShibFork.sol";
 
 contract ShibForkTest is Test {
     ShibFork public shib;
+    address tokenOnwer = address(1);
 
     function setUp() public {
-        shib = new ShibFork();
+        shib = new ShibFork(tokenOnwer);
     }
 
     function test_Increment() public {
