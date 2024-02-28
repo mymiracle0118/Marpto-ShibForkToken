@@ -12,7 +12,8 @@
     "test:sellfee": "forge test --match-path ./test/ShibaPork.t.sol -vvvvv --match-test test_sell_fee",
     "test:buywhitelist": "forge test --match-path ./test/ShibaPork.t.sol -vvvvv --match-test test_buy_whitelist",
     "test:sellwhitelist": "forge test --match-path ./test/ShibaPork.t.sol -vvvvv --match-test test_sell_whitelist",
-    "deployToBSC": "forge script script/ShibaPork.s.sol:ShibaPork --broadcast --verify src/ShibaPork.sol:ShibaPork --rpc-url bsc --etherscan-api-key bsc -vv",
+    "deployToBSC": "forge script script/ShibaPork.s.sol:ShibaPorkScript --broadcast --verify --rpc-url bsc --etherscan-api-key bsc -vv",
+    "deployToSepolia": "forge script script/ShibaPork.s.sol:ShibaPorkScript --broadcast --verify --rpc-url sepolia --etherscan-api-key sepolia -vv",
     "git": "git add . && git commit -m 'Test' && git push --all"
   },
   "devDependencies": {

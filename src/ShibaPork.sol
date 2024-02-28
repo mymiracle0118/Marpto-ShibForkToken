@@ -5,9 +5,6 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 // import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-import {console, console2} from "forge-std/Test.sol";
-
 contract ShibaPork is ERC20, Ownable {
 
     uint256 public feePercent;
@@ -16,17 +13,8 @@ contract ShibaPork is ERC20, Ownable {
     uint256 public MAX_SUPPLY;
     uint256 minted;
 
-    address alice = address(6);
-    address bob = address(7);
-
-    address routerAddress = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
-    address wethAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address factoryAddress = address(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
-
-    address pool;
-
-    mapping(address => bool) whitelist;
-    mapping(address => bool) dex;
+    mapping(address => bool) public whitelist;
+    mapping(address => bool) public dex;
     constructor(address initialOwner)
         ERC20("ShibaPork", "SORK")
         Ownable(initialOwner)
