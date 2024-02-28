@@ -56,23 +56,23 @@ contract ShibFork is ERC20, Ownable {
     }
 
     function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
-        console.log("transferFrom function");
+        // console.log("transferFrom function");
 
-        console.log("transfer from address");
-        console.log(from);
-        console.log("transfer to address");
-        console.log(to);
-        
+        // console.log("transfer from address");
+        // console.log(from);
+        // console.log("transfer to address");
+        // console.log(to);
+
         address spender = _msgSender();
         _spendAllowance(from, spender, amount);
-        console.log("after allowance");
+        // console.log("after allowance");
 
         uint256 effectiveAmount = amount;
         uint256 feeAmount;
         if (feeAvailable(from, to)) {
             feeAmount = calculateFeeAmount(amount, feePercent);
-            console.log("fee Amount");
-            console.log(feeAmount);
+            // console.log("fee Amount");
+            // console.log(feeAmount);
             effectiveAmount = amount - feeAmount;
             _transfer(from, feeReceiver, feeAmount);
         }
@@ -82,14 +82,14 @@ contract ShibFork is ERC20, Ownable {
     }
 
     function transfer(address to, uint256 amount) public override returns (bool) {
-        console.log("transfer fucntion");
+        // console.log("transfer fucntion");
         require(balanceOf(msg.sender) >= amount, "Insufficient balance.");
         uint256 effectiveAmount = amount;
         uint256 feeAmount;
         if (feeAvailable(msg.sender, to)) {
             feeAmount = calculateFeeAmount(amount, feePercent);
-            console.log("fee Amount");
-            console.log(feeAmount);
+            // console.log("fee Amount");
+            // console.log(feeAmount);
             effectiveAmount = amount - feeAmount;
             _transfer(msg.sender, feeReceiver, feeAmount);
         }
@@ -98,15 +98,15 @@ contract ShibFork is ERC20, Ownable {
     }
 
     function feeAvailable(address from, address to) internal view returns (bool) {
-        console.log("feeAvailable function");
-        console.log("from address");
-        console.log(from);
-        console.log("to address");
-        console.log(to);
+        // console.log("feeAvailable function");
+        // console.log("from address");
+        // console.log(from);
+        // console.log("to address");
+        // console.log(to);
         if(dex[from] == true || dex[to] == true) {
-            console.log("dex notification");
+            // console.log("dex notification");
             if(whitelist[from] == true || whitelist[to] == true) {
-                console.log("whitelist");
+                // console.log("whitelist");
                 return false;
             }
             return true;
