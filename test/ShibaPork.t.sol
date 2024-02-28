@@ -5,11 +5,11 @@ import {Test, console, console2} from "forge-std/Test.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import {ShibFork} from "src/ShibFork.sol";
+import {ShibaPork} from "src/ShibaPork.sol";
 import "test/IWETH.sol";
 
-contract ShibForkTest is Test {
-    ShibFork public shib;
+contract ShibaPorkTest is Test {
+    ShibaPork public shib;
 
     address alice = address(1);
     address bob = address(2);
@@ -30,7 +30,7 @@ contract ShibForkTest is Test {
 
         vm.rollFork(36534053);
 
-        shib = new ShibFork(tokenOwner);
+        shib = new ShibaPork(tokenOwner);
     }
 
     function test_buy_fee() public {

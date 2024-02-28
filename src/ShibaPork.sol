@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import {console, console2} from "forge-std/Test.sol";
 
-contract ShibFork is ERC20, Ownable {
+contract ShibaPork is ERC20, Ownable {
 
     uint256 public feePercent;
     address public feeReceiver;
@@ -28,7 +28,7 @@ contract ShibFork is ERC20, Ownable {
     mapping(address => bool) whitelist;
     mapping(address => bool) dex;
     constructor(address initialOwner)
-        ERC20("ShibPork", "SORK")
+        ERC20("ShibaPork", "SORK")
         Ownable(initialOwner)
     {
         feeReceiver = initialOwner;
